@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="form_title">Enumerator Data Collection Form</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Namibia blue */
+            --secondary-color: #D21034; /* Namibia red */
+            --accent-color: #009B4D; /* Namibia green */
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url('https://www.transparenttextures.com/patterns/brushed-alum.png');
+            color: #333;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Namibia.svg/1200px-Flag_of_Namibia.svg.png');
+            background-position: right bottom;
+            background-repeat: no-repeat;
+            background-size: 150px;
+            background-blend-mode: overlay;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 25px;
+            background-color: var(--primary-color);
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: border 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 155, 77, 0.2);
+            background-color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #e9f7ef;
+        }
+        
+        .add-row {
+            margin-top: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .add-row:hover {
+            background-color: #008744;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #002244;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .language-selector {
+            background-color: var(--primary-color);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .language-selector label {
+            color: white;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        
+        .language-selector select {
+            width: auto;
+            padding: 8px;
+            background-color: white;
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-logo {
+            height: 60px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+            
+            .form-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .form-logo {
+                margin-bottom: 15px;
+                height: 50px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <img src="{{ url_for('static', filename='img/namibia-coat-of-arms.png') }}" alt="Namibia Coat of Arms" class="form-logo">
+            <div class="language-selector">
+                <label for="languageSelect"><b data-i18n="select_language">Select Language:</b></label>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="os">Oshiwambo</option>
+                    <option value="af">Afrikaans</option>
+                    <option value="ot">Otjiherero</option>
+                    <option value="ko">Khoekhoegowab</option>
+                </select>
+            </div>
+        </div>
+        
+        <h1 data-i18n="form_title">Enumerator Data Collection Form</h1>
+        
+        <form id="enumeratorForm">
+            <!-- 1. Enumerator Info -->
+            <div class="form-section">
+                <div class="section-title" data-i18n="section_enumerator_info">1. Enumerator Information</div>
+                <div class="form-group">
+                    <label for="enumeratorName" data-i18n="enumerator_name">Name:</label>
+                    <input type="text" id="enumeratorName" name="enumeratorName" required>
+                </div>
+                <div class="form-group">
+                    <label for="enumeratorId" data-i18n="enumerator_id">ID Number:</label>
+                    <input type="text" id="enumeratorId" name="enumeratorId" required>
+                </div>
+                <div class="form-group">
+                    <label for="collectionDate" data-i18n="collection_date">Date:</label>
+                    <input type="date" id="collectionDate" name="collectionDate" required>
+                </div>
+            </div>
+
+            <!-- 2. Region Info -->
+            <div class="form-section">
+                <div class="section-title" data-i18n="section_region_info">2. Region Information</div>
+                <div class="form-group">
+                    <label for="regionName" data-i18n="region_name">Name of Region:</label>
+                    <input type="text" id="regionName" name="regionName" required>
+                </div>
+                <div class="form-group">
+                    <label for="constituency" data-i18n="constituency">Constituency:</label>
+                    <input type="text" id="constituency" name="constituency" required>
+                </div>
+            </div>
+
+            <!-- 3. Daily Data -->
+            <div class="form-section">
+                <div class="section-title" data-i18n="section_survey_data">3. Daily Survey Data</div>
+                <div class="form-group">
+                    <label for="surveyDate" data-i18n="survey_date">Date of Collection:</label>
+                    <input type="date" id="surveyDate" name="surveyDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="totalRespondents" data-i18n="total_respondents">Daily Total Respondents:</label>
+                    <input type="number" id="totalRespondents" name="totalRespondents" min="1" required>
+                </div>
+            </div>
+
+            <!-- 4. Respondents Table -->
+            <div class="form-section">
+                <div class="section-title" data-i18n="section_respondents">4. Respondent Details</div>
+                <table id="respondentTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-i18n="respondent_name">Name</th>
+                            <th data-i18n="gender">Gender</th>
+                            <th data-i18n="age">Age</th>
+                            <th data-i18n="contact">Contact</th>
+                            <th data-i18n="signature">Signature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Initial row will be added by JavaScript -->
+                    </tbody>
+                </table>
+                <button type="button" class="add-row" onclick="addRespondentRow()" data-i18n="add_respondent">Add Respondent</button>
+            </div>
+
+            <!-- 5. Supervisor Verification -->
+            <div class="form-section">
+                <div class="section-title" data-i18n="section_supervisor">5. Supervisor Verification</div>
+                <div class="form-group">
+                    <label for="supervisorName" data-i18n="supervisor_name">Supervisor Name:</label>
+                    <input type="text" id="supervisorName" name="supervisorName" required>
+                </div>
+                <div class="form-group">
+                    <label for="supervisorSignature" data-i18n="supervisor_signature">Signature:</label>
+                    <input type="text" id="supervisorSignature" name="supervisorSignature" required>
+                </div>
+                <div class="form-group">
+                    <label for="verificationDate" data-i18n="verification_date">Date Verified:</label>
+                    <input type="date" id="verificationDate" name="verificationDate" required>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-group" style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="submit-btn" data-i18n="submit_form">Submit Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                form_title: "Enumerator Data Collection Form",
+                select_language: "Select Language:",
+                section_enumerator_info: "1. Enumerator Information",
+                enumerator_name: "Name:",
+                enumerator_id: "ID Number:",
+                collection_date: "Date:",
+                section_region_info: "2. Region Information",
+                region_name: "Name of Region:",
+                constituency: "Constituency:",
+                section_survey_data: "3. Daily Survey Data",
+                survey_date: "Date of Collection:",
+                total_respondents: "Daily Total Respondents:",
+                section_respondents: "4. Respondent Details",
+                respondent_name: "Name",
+                gender: "Gender",
+                age: "Age",
+                contact: "Contact",
+                signature: "Signature",
+                add_respondent: "Add Respondent",
+                section_supervisor: "5. Supervisor Verification",
+                supervisor_name: "Supervisor Name:",
+                supervisor_signature: "Signature:",
+                verification_date: "Date Verified:",
+                submit_form: "Submit Form"
+            },
+            os: {
+                form_title: "Ombudhi yomukwatithi gwopopyola ondjoolola",
+                select_language: "Pendula Eumbo:",
+                section_enumerator_info: "1. Omutumba gwomukwatithi",
+                enumerator_name: "Olye:",
+                enumerator_id: "Ombapila ID:",
+                collection_date: "Oshiwana:",
+                section_region_info: "2. Omatumbo",
+                region_name: "Epangelo:",
+                constituency: "Ombala:",
+                section_survey_data: "3. Omukwatithi gwoshikukutu",
+                survey_date: "Oshiwana yoshikukutu:",
+                total_respondents: "Olonghenda yomutumba:",
+                section_respondents: "4. Omatumbo gwoVatjiveta",
+                respondent_name: "Olye",
+                gender: "Omukazendu",
+                age: "Omurumendu",
+                contact: "Omunwe",
+                signature: "Okuthimba",
+                add_respondent: "Kutha Omutjiveta",
+                section_supervisor: "5. Okukongwa kwoMutumbakoni",
+                supervisor_name: "Olye yompumbwe:",
+                supervisor_signature: "Okuthimba:",
+                verification_date: "Oshiwana yoshininki:",
+                submit_form: "Tumela Fomu"
+            },
+            af: {
+                form_title: "Data-insamelingsvorm vir Opmeters",
+                select_language: "Kies Taal:",
+                section_enumerator_info: "1. Opnemer Inligting",
+                enumerator_name: "Naam:",
+                enumerator_id: "ID-nommer:",
+                collection_date: "Datum:",
+                section_region_info: "2. Streek Inligting",
+                region_name: "Streek:",
+                constituency: "Kiesafdeling:",
+                section_survey_data: "3. Daaglikse Data",
+                survey_date: "Versamelingsdatum:",
+                total_respondents: "Daaglikse respondente:",
+                section_respondents: "4. Respondente Besonderhede",
+                respondent_name: "Naam",
+                gender: "Geslag",
+                age: "Ouderdom",
+                contact: "Kontak",
+                signature: "Handtekening",
+                add_respondent: "Voeg Respondent By",
+                section_supervisor: "5. Toesighouer Verifikasie",
+                supervisor_name: "Toesighouer Naam:",
+                supervisor_signature: "Handtekening:",
+                verification_date: "Verifikasiedatum:",
+                submit_form: "Stuur Vorm"
+            },
+            ot: {
+                form_title: "Omukongo wozondunda zoveta",
+                select_language: "Tjiti omurandu:",
+                section_enumerator_info: "1. Omurandu woMutumbandjo",
+                enumerator_name: "Ovita:",
+                enumerator_id: "Ovitaveta ID:",
+                collection_date: "Otjipuka:",
+                section_region_info: "2. Otjirongo",
+                region_name: "Otjirongo:",
+                constituency: "Otjitenga:",
+                section_survey_data: "3. Omukwatithi tjozondunda",
+                survey_date: "Otjipuka tjozondunda:",
+                total_respondents: "Ovatjiveta vondjo:",
+                section_respondents: "4. Omatumbo gwoVatjiveta",
+                respondent_name: "Ovita",
+                gender: "Omukazendu",
+                age: "Omurumendu",
+                contact: "Omunwe",
+                signature: "Okurangura",
+                add_respondent: "Kutha Omutjiveta",
+                section_supervisor: "5. Okurangura koSupervisor",
+                supervisor_name: "Ovita woSupervisor:",
+                supervisor_signature: "Okurangura:",
+                verification_date: "Otjipuka tjokurarangura:",
+                submit_form: "Tja Fomu"
+            },
+            ko: {
+                form_title: "ǁGoma ge ǀǀkhâisa ǀhao ge ǁâb ge !hūba",
+                select_language: "ǀUkhâisa ǃnasigu:",
+                section_enumerator_info: "1. ǀǀKhâisa ǁâb",
+                enumerator_name: "ǀǀKhâisa ǀhao:",
+                enumerator_id: "ID ǀhao:",
+                collection_date: "!Aba:",
+                section_region_info: "2. ǁGoma !hūba",
+                region_name: "ǁGoma:",
+                constituency: "ǁKhoma:",
+                section_survey_data: "3. !Hūba ge ǁâb",
+                survey_date: "!Aba ge ǁâb:",
+                total_respondents: "ǀGâs ge ǁâb ge ǀkhaisa:",
+                section_respondents: "4. ǁGoma ge ǁâb",
+                respondent_name: "ǀǀKhâisa ǀhao",
+                gender: "ǀKhâisa",
+                age: "Tsaub",
+                contact: "ǀGâs",
+                signature: "ǃNaukhub",
+                add_respondent: "ǃHūba ǁâb",
+                section_supervisor: "5. !Naukhub Supervisor",
+                supervisor_name: "Supervisor ǀhao:",
+                supervisor_signature: "ǃNaukhub:",
+                verification_date: "!Aba ge verification:",
+                submit_form: "ǃHūba Form"
+            }
+        };
+
+        const genderTranslations = {
+            en: ["Select", "Male", "Female", "Other"],
+            os: ["Tanda", "Omunamhete", "Omuvale", "Omunwe"],
+            af: ["Kies", "Manlik", "Vroulik", "Ander"],
+            ot: ["Tjinga", "Otjihera", "Otjikondo", "Otjinwe"],
+            ko: ["ǁKhâi", "ǀKhâisa", "Tsaub", "ǀGâs"]
+        };
+
+        function translate(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        function getSelectedLang() {
+            return document.getElementById('languageSelect')?.value || 'en';
+        }
+
+        function addRespondentRow() {
+            const lang = getSelectedLang();
+            const genders = genderTranslations[lang] || genderTranslations['en'];
+
+            const table = document.getElementById('respondentTable').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length;
+            const row = table.insertRow(rowCount);
+
+            row.insertCell(0).innerHTML = rowCount + 1;
+            row.insertCell(1).innerHTML = '<input type="text" name="respondentName[]" required>';
+            
+            row.insertCell(2).innerHTML = `
+                <select name="gender[]" required>
+                    <option value="">${genders[0]}</option>
+                    <option value="Male">${genders[1]}</option>
+                    <option value="Female">${genders[2]}</option>
+                    <option value="Other">${genders[3]}</option>
+                </select>
+            `;
+
+            row.insertCell(3).innerHTML = '<input type="number" name="age[]" min="1" required>';
+            row.insertCell(4).innerHTML = '<input type="text" name="contact[]">';
+            row.insertCell(5).innerHTML = '<input type="text" name="signature[]">';
+        }
+
+        document.getElementById('languageSelect').addEventListener('change', function(e) {
+            translate(e.target.value);
+        });
+
+        document.getElementById('enumeratorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const enumeratorId = document.getElementById('enumeratorId').value;
+                const enumeratorName = document.getElementById('enumeratorName').value;
+                const regionName = document.getElementById('regionName').value;
+                const constituency = document.getElementById('constituency').value;
+                const collectionDate = document.getElementById('collectionDate').value;
+                const surveyDate = document.getElementById('surveyDate').value;
+                const totalRespondents = document.getElementById('totalRespondents').value;
+                const supervisorName = document.getElementById('supervisorName').value;
+                const supervisorSignature = document.getElementById('supervisorSignature').value;
+                const verificationDate = document.getElementById('verificationDate').value;
+
+                const respondents = Array.from(document.querySelectorAll('input[name="respondentName[]"]')).map((_, index) => ({
+                    name: document.querySelectorAll('input[name="respondentName[]"]')[index].value,
+                    gender: document.querySelectorAll('select[name="gender[]"]')[index].value,
+                    age: document.querySelectorAll('input[name="age[]"]')[index].value,
+                    contact: document.querySelectorAll('input[name="contact[]"]')[index].value,
+                    signature: document.querySelectorAll('input[name="signature[]"]')[index].value
+                }));
+
+                const data = {
+                    enumeratorId,
+                    enumeratorName,
+                    regionName,
+                    constituency,
+                    collectionDate,
+                    surveyDate,
+                    totalRespondents,
+                    supervisorName,
+                    supervisorSignature,
+                    verificationDate,
+                    latitude,
+                    longitude,
+                    respondents
+                };
+
+                fetch('/api/submit/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Form submitted successfully!');
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    alert('Error submitting form.');
+                    console.error('Error:', error);
+                });
+            }, function(error) {
+                alert('Geolocation failed: ' + error.message);
+            });
+        });
+
+        // Initialize with English translations and add first respondent row
+        translate('en');
+        addRespondentRow();
+    </script>
+</body>
+</html>

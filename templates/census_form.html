@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namibia Census 2025</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Namibia blue */
+            --secondary-color: #D21034; /* Namibia red */
+            --accent-color: #009639; /* Namibia green */
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo img {
+            height: 60px;
+            margin-right: 15px;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 0.5rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        nav li {
+            margin: 0 15px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/img/namibia-landscape.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #007a2d;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .radio-group, .checkbox-group {
+            margin-bottom: 1rem;
+        }
+        
+        .radio-option, .checkbox-option {
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 5px 0;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/namibia-coat-of-arms.png') }}" alt="Namibia Coat of Arms">
+
+            <div>
+                <h1>Namibia Statistics Agency</h1>
+                <p>2025 Population and Housing Census</p>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About the Census</a></li>
+            <li><a href="#questionnaire">Online Questionnaire</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <section id="home" class="hero">
+            <h1>Namibia Census 2025</h1>
+            <p>Your participation shapes Namibia's future</p>
+            <a href="#questionnaire" class="btn">Complete Questionnaire Online</a>
+        </section>
+        
+        <section id="about" class="section">
+            <h2 class="section-title">About the Census</h2>
+            <p>The Namibia Population and Housing Census is conducted every ten years to collect important demographic, social and economic data about all people in Namibia. The information gathered helps government and other organizations make informed decisions about resource allocation, policy development and service delivery.</p>
+            
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Why Participate?</div>
+                    <div class="card-body">
+                        <p>Census data helps determine how billions of dollars in federal funding flow into communities each year for schools, roads, hospitals, and other vital programs.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Confidentiality</div>
+                    <div class="card-body">
+                        <p>By law, your census responses cannot be used against you by any government agency or court. Your answers are confidential and protected.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Key Dates</div>
+                    <div class="card-body">
+                        <p><strong>Census Reference Night:</strong> September 24, 2025</p>
+                        <p><strong>Enumeration Period:</strong> September 25 - October 15, 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="questionnaire" class="section">
+            <h2 class="section-title">Census Questionnaire</h2>
+            <p>Please complete the following information for your household. All fields marked with * are required.</p>
+            
+            <form id="censusForm" method="POST" action="/census/submit">
+
+                <div class="card">
+                    <div class="card-header">Section A: Identification Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="region">Region *</label>
+                            <select id="region" name="region" required>
+                                <option value="">Select Region</option>
+                                <option value="Erongo">Erongo</option>
+                                <option value="Hardap">Hardap</option>
+                                <option value="Karas">Karas</option>
+                                <option value="Kavango East">Kavango East</option>
+                                <option value="Kavango West">Kavango West</option>
+                                <option value="Khomas">Khomas</option>
+                                <option value="Kunene">Kunene</option>
+                                <option value="Ohangwena">Ohangwena</option>
+                                <option value="Omaheke">Omaheke</option>
+                                <option value="Omusati">Omusati</option>
+                                <option value="Oshana">Oshana</option>
+                                <option value="Oshikoto">Oshikoto</option>
+                                <option value="Otjozondjupa">Otjozondjupa</option>
+                                <option value="Zambezi">Zambezi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="constituency">Constituency *</label>
+                            <input type="text" id="constituency" name="constituency" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ea-code">EA Code</label>
+                            <input type="text" id="ea-code" name="ea-code" pattern="[0-9]{4}" maxlength="4">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="locality">Locality Name *</label>
+                            <input type="text" id="locality" name="locality" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="household-number">Household Number</label>
+                            <input type="text" id="household-number" name="household-number" pattern="[0-9]{4}" maxlength="4">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="physical-address">Physical Address of the household *</label>
+                            <textarea id="physical-address" name="physical-address" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Telephone/Mobile Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="head-name">Name of Head/acting head of Household *</label>
+                            <input type="text" id="head-name" name="head-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="respondent-name">Name of Primary Respondent *</label>
+                            <input type="text" id="respondent-name" name="respondent-name" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">Section B: Housing Information</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>What is the type of Housing unit? *</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type1" name="housing-type" value="Formal dwelling" required>
+                                    <label for="housing-type1">Formal dwelling (house on land/private block)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type2" name="housing-type" value="Traditional dwelling">
+                                    <label for="housing-type2">Traditional dwelling (made of traditional materials)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type3" name="housing-type" value="Flat/apartment">
+                                    <label for="housing-type3">Flat or apartment in a block</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type4" name="housing-type" value="Cluster house">
+                                    <label for="housing-type4">Cluster house in complex</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type5" name="housing-type" value="Town house">
+                                    <label for="housing-type5">Town house (semi-detached)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type6" name="housing-type" value="Backyard dwelling">
+                                    <label for="housing-type6">Formal dwelling/room/flat in backyard</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type7" name="housing-type" value="Informal backyard">
+                                    <label for="housing-type7">Informal dwelling/shack in backyard</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type8" name="housing-type" value="Informal settlement">
+                                    <label for="housing-type8">Informal dwelling/shack in informal settlement/farm</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type9" name="housing-type" value="Single quarter">
+                                    <label for="housing-type9">Single quarter</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="housing-type10" name="housing-type" value="Other">
+                                    <label for="housing-type10">Other (please specify)</label>
+                                    <input type="text" id="housing-type-other" name="housing-type-other" style="margin-left: 20px; width: calc(100% - 20px); display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>What is the ownership status of this housing unit? *</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership1" name="ownership" value="Owned fully paid" required>
+                                    <label for="ownership1">Owned and fully paid off (without Mortgage)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership2" name="ownership" value="Owned with mortgage">
+                                    <label for="ownership2">Owned, but not yet fully paid off (with Mortgage)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership3" name="ownership" value="Rented individual">
+                                    <label for="ownership3">Rented (individual)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership4" name="ownership" value="Rented institution">
+                                    <label for="ownership4">Rented from institution (Government, Local Authority, etc.)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership5" name="ownership" value="Rent free">
+                                    <label for="ownership5">Occupied rent free</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="ownership6" name="ownership" value="Other ownership">
+                                    <label for="ownership6">Other (please specify)</label>
+                                    <input type="text" id="ownership-other" name="ownership-other" style="margin-left: 20px; width: calc(100% - 20px); display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>What is the main material used for the roof? *</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="roof1" name="roof" value="Corrugated iron" required>
+                                    <label for="roof1">Corrugated iron/iron sheet</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof2" name="roof" value="Asbestos sheet">
+                                    <label for="roof2">Asbestos sheet</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof3" name="roof" value="Brick">
+                                    <label for="roof3">Brick</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof4" name="roof" value="Concrete">
+                                    <label for="roof4">Concrete</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof5" name="roof" value="Thatch">
+                                    <label for="roof5">Thatch, grass</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof6" name="roof" value="Slate">
+                                    <label for="roof6">Slate</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof7" name="roof" value="Wood with thatch">
+                                    <label for="roof7">Wood covered with thatch</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof8" name="roof" value="Sticks with mud">
+                                    <label for="roof8">Sticks with mud and cow-dung</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof9" name="roof" value="Tin">
+                                    <label for="roof9">Tin</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="roof10" name="roof" value="Other roof">
+                                    <label for="roof10">Other (please specify)</label>
+                                    <input type="text" id="roof-other" name="roof-other" style="margin-left: 20px; width: calc(100% - 20px); display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>How many rooms are used for sleeping? *</label>
+                            <input type="number" id="sleeping-rooms" name="sleeping-rooms" min="1" required>
+                            <small>Include living rooms, dining rooms, study rooms, kitchens and garages if used for sleeping purposes</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">I confirm that the information provided is accurate and complete to the best of my knowledge. I understand that this information is protected under the Statistics Act (Act no. 9 of 2011) and will be used for statistical purposes only. *</label>
+                </div>
+                
+                <button type="submit" class="btn">Submit Census Form</button>
+            </form>
+        </section>
+        
+        <section id="faq" class="section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="card">
+                <div class="card-header">Who should be counted in the census?</div>
+                <div class="card-body">
+                    <p>All persons who spent the census reference night (September 24, 2025) in this household including babies, old people, persons with disabilities, visitors and those who were on night shift (e.g., nurses, security guards, etc.) must be counted.</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 15px;">
+                <div class="card-header">Is my information confidential?</div>
+                <div class="card-body">
+                    <p>Yes. The Statistics Act (Act no. 9 of 2011) requires that all information collected will be kept confidential and used only for statistical purposes. A document, information, or a record provided to the Agency that relates to an individual and household, may not be disclosed to a third party.</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 15px;">
+                <div class="card-header">What if I don't participate?</div>
+                <div class="card-body">
+                    <p>The Statistics Act requires that all persons in Namibia participate in the census. People who misuse the data collected can be prosecuted.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="section">
+            <h2 class="section-title">Contact Us</h2>
+            
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">Namibia Statistics Agency</div>
+                    <div class="card-body">
+                        <p><strong>Address:</strong> Post Street Mall, Windhoek, Namibia</p>
+                        <p><strong>Phone:</strong> +264 61 431 3200</p>
+                        <p><strong>Email:</strong> info@nsa.org.na</p>
+                        <p><strong>Website:</strong> www.nsa.org.na</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Regional Offices</div>
+                    <div class="card-body">
+                        <p>Contact your nearest regional office for assistance with the census:</p>
+                        <ul>
+                            <li>Windhoek: +264 61 431 3200</li>
+                            <li>Oshakati: +264 65 223 201</li>
+                            <li>Walvis Bay: +264 64 209 511</li>
+                            <li>Keetmanshoop: +264 63 222 855</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Sitemap</a>
+        </div>
+        <p>&copy; 2025 Namibia Statistics Agency. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Show "Other" text field when "Other" option is selected
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherId = this.id + '-other';
+                const otherField = document.getElementById(otherId);
+                if (otherField) {
+                    otherField.style.display = this.checked && this.value.includes('Other') ? 'block' : 'none';
+                    if (this.checked && this.value.includes('Other')) {
+                        otherField.required = true;
+                    } else {
+                        otherField.required = false;
+                    }
+                }
+            });
+        });
+    
+        // Form submission
+        document.getElementById('censusForm').addEventListener('submit', function(e) {
+    // Client-side validation can remain here if needed
+    // But don't prevent default if validation passes
+    if (!this.checkValidity()) {
+        e.preventDefault();
+        alert('Please fill in all required fields correctly.');
+    }
+    // Otherwise, let it submit normally to your Flask route
+});
+
+document.getElementById("censusForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // stop default submission
+
+    const formData = new FormData(this);
+
+    fetch("/census/submit", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("✅ Census data submitted successfully!");
+            document.getElementById("censusForm").reset();
+        } else {
+            alert("❌ Failed to submit data.");
+        }
+    })
+    .catch(error => {
+        alert("🚫 An error occurred.");
+        console.error(error);
+    });
+});
+    </script>
+</body>
+</html>

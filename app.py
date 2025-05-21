@@ -12,9 +12,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 db.init_app(app)
 CORS(app)
-@app.route('/census')
-def census_form():
-    return render_template('census_form.html')
 
 @app.route('/census')
 def census_form():

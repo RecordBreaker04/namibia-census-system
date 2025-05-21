@@ -19,10 +19,6 @@ def census_form():
 def enumerator_form():
     return render_template('enumerator.html')
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
 @app.route('/census/submit', methods=['POST'])
 def submit_census():
     data = request.form

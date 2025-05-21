@@ -48,14 +48,15 @@ def submit_census():
 def submit():
     data = request.json
 
-    pt = WKTElement(f'POINT({data["longitude"]} {data["latitude"]})', srid=4326)
+    # Create a PostGIS point geometry
+    point = WKTElement(f'POINT({data["longitude"]} {data["latitude"]})', srid=4326)
 
     submission = EnumeratorSubmission(
         enumerator_id     = data['enumeratorId'],
         enumerator_name   = data['enumeratorName'],
         region            = data['regionName'],
         total_respondents = int(data['totalRespondents']),
-        location          = pt
+        location          = point
     )
 
     db.session.add(submission)

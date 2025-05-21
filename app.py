@@ -3,7 +3,7 @@ from flask_cors import CORS
 from config import SQLALCHEMY_DATABASE_URI
 from models import db, EnumeratorSubmission
 from census_questionnaire_response import CensusResponse
-
+from geoalchemy2.elements import WKTElement
 
 
 
@@ -44,24 +44,24 @@ def submit_census():
     db.session.commit()
     return "Census data submitted successfully!"
 
-@app.route('/')
-def index():
-    return render_template('enumerator.html')
-
 @app.route('/api/submit/', methods=['POST'])
 def submit():
     data = request.json
+
+    pt = WKTElement(f'POINT({data["longitude"]} {data["latitude"]})', srid=4326)
+
     submission = EnumeratorSubmission(
-        enumerator_id=data['enumeratorId'],
-        enumerator_name=data['enumeratorName'],
-        region=data['regionName'],
-        total_respondents=data['totalRespondents'],
-        latitude=data['latitude'],
-        longitude=data['longitude']
+        enumerator_id     = data['enumeratorId'],
+        enumerator_name   = data['enumeratorName'],
+        region            = data['regionName'],
+        total_respondents = int(data['totalRespondents']),
+        location          = pt
     )
+
     db.session.add(submission)
     db.session.commit()
     return jsonify({"message": "Data saved successfully"}), 201
+
 
 @app.route('/api/submissions', methods=['GET'])
 def get_submissions():

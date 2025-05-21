@@ -66,7 +66,14 @@ def submit():
 
 @app.route('/api/submissions', methods=['GET'])
 def get_submissions():
-    submissions = EnumeratorSubmission.query.all()
+    submissions = db.session.query(
+        EnumeratorSubmission.enumerator_name,
+        EnumeratorSubmission.region,
+        func.ST_Y(EnumeratorSubmission.location).label('latitude'),
+        func.ST_X(EnumeratorSubmission.location).label('longitude'),
+        EnumeratorSubmission.timestamp
+    ).all()
+
     result = []
     for sub in submissions:
         result.append({
@@ -76,6 +83,7 @@ def get_submissions():
             "longitude": sub.longitude,
             "timestamp": sub.timestamp.isoformat() if sub.timestamp else None
         })
+
     return jsonify(result)
 
 @app.route('/dashboard')

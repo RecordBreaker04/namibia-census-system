@@ -4,6 +4,7 @@ from config import SQLALCHEMY_DATABASE_URI
 from models import db, EnumeratorSubmission
 from census_questionnaire_response import CensusResponse
 from geoalchemy2.elements import WKTElement
+from sqlalchemy import func
 
 
 

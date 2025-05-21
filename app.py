@@ -12,14 +12,9 @@ app = Flask(__name__)
 app.config.from_object('config')
 db.init_app(app)
 CORS(app)
-
-@app.route('/census')
+@app.route('/')
 def census_form():
     return render_template('census_form.html')
-
-@app.route('/')
-def enumerator_form():
-    return render_template('enumerator.html')
 
 @app.route('/census/submit', methods=['POST'])
 def submit_census():

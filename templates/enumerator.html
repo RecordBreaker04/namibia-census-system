@@ -217,6 +217,26 @@
             object-fit: contain;
         }
         
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        
+        .online {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .offline {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -247,6 +267,8 @@
     </style>
 </head>
 <body>
+    <div id="connectionStatus" class="connection-status offline">Offline</div>
+    
     <div class="form-container">
         <div class="form-header">
             <img src="{{ url_for('static', filename='img/namibia-coat-of-arms.png') }}" alt="Namibia Coat of Arms" class="form-logo">
@@ -495,6 +517,160 @@
             ko: ["ǁKhâi", "ǀKhâisa", "Tsaub", "ǀGâs"]
         };
 
+        // Update connection status indicator
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('connectionStatus');
+            if (navigator.onLine) {
+                statusElement.textContent = "Online";
+                statusElement.className = "connection-status online";
+            } else {
+                statusElement.textContent = "Offline";
+                statusElement.className = "connection-status offline";
+            }
+        }
+
+        // Save form data to local storage when offline
+        function saveToQueue(formData) {
+            let queue = JSON.parse(localStorage.getItem('submissionQueue')) || [];
+            queue.push(formData);
+            localStorage.setItem('submissionQueue', JSON.stringify(queue));
+            alert("Your data has been saved locally and will be submitted when you're back online.");
+        }
+
+        // Submit form data to server
+        function submitToServer(formData) {
+            return fetch('/api/submit/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            });
+        }
+
+        // Process the submission queue when online
+        function processSubmissionQueue() {
+            let queue = JSON.parse(localStorage.getItem('submissionQueue')) || [];
+            if (queue.length === 0) return;
+
+            const failedSubmissions = [];
+            
+            // Process each item in the queue
+            queue.forEach((data, index) => {
+                submitToServer(data)
+                    .then(response => {
+                        if (response.ok) {
+                            // Remove successfully submitted item from queue
+                            queue.splice(index, 1);
+                            localStorage.setItem('submissionQueue', JSON.stringify(queue));
+                            console.log("Successfully synced queued data.");
+                        } else {
+                            failedSubmissions.push(data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error submitting queued data:", error);
+                        failedSubmissions.push(data);
+                    });
+            });
+
+            // Update queue with any failed submissions
+            if (failedSubmissions.length > 0) {
+                localStorage.setItem('submissionQueue', JSON.stringify(failedSubmissions));
+            }
+        }
+
+        // Handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const enumeratorId = document.getElementById('enumeratorId').value;
+            const enumeratorName = document.getElementById('enumeratorName').value;
+            const regionName = document.getElementById('regionName').value;
+            const constituency = document.getElementById('constituency').value;
+            const collectionDate = document.getElementById('collectionDate').value;
+            const surveyDate = document.getElementById('surveyDate').value;
+            const totalRespondents = document.getElementById('totalRespondents').value;
+            const supervisorName = document.getElementById('supervisorName').value;
+            const supervisorSignature = document.getElementById('supervisorSignature').value;
+            const verificationDate = document.getElementById('verificationDate').value;
+
+            const respondents = Array.from(document.querySelectorAll('input[name="respondentName[]"]')).map((_, index) => ({
+                name: document.querySelectorAll('input[name="respondentName[]"]')[index].value,
+                gender: document.querySelectorAll('select[name="gender[]"]')[index].value,
+                age: document.querySelectorAll('input[name="age[]"]')[index].value,
+                contact: document.querySelectorAll('input[name="contact[]"]')[index].value,
+                signature: document.querySelectorAll('input[name="signature[]"]')[index].value
+            }));
+
+            const formData = {
+                enumeratorId,
+                enumeratorName,
+                regionName,
+                constituency,
+                collectionDate,
+                surveyDate,
+                totalRespondents,
+                supervisorName,
+                supervisorSignature,
+                verificationDate,
+                respondents
+            };
+
+            if (!navigator.onLine) {
+                // If offline, save to queue
+                saveToQueue(formData);
+                return;
+            }
+
+            // If online, try to submit with geolocation
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    formData.latitude = position.coords.latitude;
+                    formData.longitude = position.coords.longitude;
+
+                    submitToServer(formData)
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Form submitted successfully!');
+                                return response.json();
+                            } else {
+                                throw new Error('Submission failed');
+                            }
+                        })
+                        .then(data => {
+                            console.log('Success:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            saveToQueue(formData);
+                            alert('Error submitting form. Data saved locally for later submission.');
+                        });
+                },
+                error => {
+                    console.warn('Geolocation failed:', error.message);
+                    formData.latitude = null;
+                    formData.longitude = null;
+                    
+                    submitToServer(formData)
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Form submitted successfully (without location)!');
+                                return response.json();
+                            } else {
+                                throw new Error('Submission failed');
+                            }
+                        })
+                        .then(data => {
+                            console.log('Success:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            saveToQueue(formData);
+                            alert('Error submitting form. Data saved locally for later submission.');
+                        });
+                }
+            );
+        }
+
         function translate(lang) {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -533,77 +709,31 @@
             row.insertCell(5).innerHTML = '<input type="text" name="signature[]">';
         }
 
+        // Event listeners
         document.getElementById('languageSelect').addEventListener('change', function(e) {
             translate(e.target.value);
         });
 
-        document.getElementById('enumeratorForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.getElementById('enumeratorForm').addEventListener('submit', handleFormSubmit);
 
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                const enumeratorId = document.getElementById('enumeratorId').value;
-                const enumeratorName = document.getElementById('enumeratorName').value;
-                const regionName = document.getElementById('regionName').value;
-                const constituency = document.getElementById('constituency').value;
-                const collectionDate = document.getElementById('collectionDate').value;
-                const surveyDate = document.getElementById('surveyDate').value;
-                const totalRespondents = document.getElementById('totalRespondents').value;
-                const supervisorName = document.getElementById('supervisorName').value;
-                const supervisorSignature = document.getElementById('supervisorSignature').value;
-                const verificationDate = document.getElementById('verificationDate').value;
-
-                const respondents = Array.from(document.querySelectorAll('input[name="respondentName[]"]')).map((_, index) => ({
-                    name: document.querySelectorAll('input[name="respondentName[]"]')[index].value,
-                    gender: document.querySelectorAll('select[name="gender[]"]')[index].value,
-                    age: document.querySelectorAll('input[name="age[]"]')[index].value,
-                    contact: document.querySelectorAll('input[name="contact[]"]')[index].value,
-                    signature: document.querySelectorAll('input[name="signature[]"]')[index].value
-                }));
-
-                const data = {
-                    enumeratorId,
-                    enumeratorName,
-                    regionName,
-                    constituency,
-                    collectionDate,
-                    surveyDate,
-                    totalRespondents,
-                    supervisorName,
-                    supervisorSignature,
-                    verificationDate,
-                    latitude,
-                    longitude,
-                    respondents
-                };
-
-                fetch('/api/submit/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Form submitted successfully!');
-                    console.log('Success:', data);
-                })
-                .catch((error) => {
-                    alert('Error submitting form.');
-                    console.error('Error:', error);
-                });
-            }, function(error) {
-                alert('Geolocation failed: ' + error.message);
-            });
+        // Set up online/offline event listeners
+        window.addEventListener('online', () => {
+            updateConnectionStatus();
+            processSubmissionQueue();
         });
 
-        // Initialize with English translations and add first respondent row
+        window.addEventListener('offline', updateConnectionStatus);
+
+        // Initialize
+        updateConnectionStatus();
         translate('en');
         addRespondentRow();
+
+        // Check for queued submissions on page load if online
+        if (navigator.onLine) {
+            processSubmissionQueue();
+        }
     </script>
-<a href="/dashboard" class="btn">View Dashboard</a>
+    <a href="/dashboard" class="btn">View Dashboard</a>
 </body>
 </html>
